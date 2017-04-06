@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BB1B86ED1E96C25100ACA185 /* BookDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB1B86EC1E96C25100ACA185 /* BookDetailViewController.swift */; };
 		BBB56BDB1E940AE700344E44 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBB56BDA1E940AE700344E44 /* AppDelegate.swift */; };
 		BBB56BDD1E940AE700344E44 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBB56BDC1E940AE700344E44 /* ViewController.swift */; };
 		BBB56BE01E940AE700344E44 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BBB56BDE1E940AE700344E44 /* Main.storyboard */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BB1B86EC1E96C25100ACA185 /* BookDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookDetailViewController.swift; sourceTree = "<group>"; };
 		BBB56BD71E940AE700344E44 /* CardCatalog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CardCatalog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BBB56BDA1E940AE700344E44 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BBB56BDC1E940AE700344E44 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -67,6 +69,7 @@
 				BBB56BEE1E940B1E00344E44 /* BookCollection.swift */,
 				BBB56BED1E940B1E00344E44 /* BookListing.swift */,
 				BBB56BDE1E940AE700344E44 /* Main.storyboard */,
+				BB1B86EC1E96C25100ACA185 /* BookDetailViewController.swift */,
 				BBB56BF31E941DC600344E44 /* BookListingController.swift */,
 				BBB56BF11E941C1B00344E44 /* BookListingCell.swift */,
 			);
@@ -161,6 +164,7 @@
 				BBB56BEF1E940B1E00344E44 /* BookListing.swift in Sources */,
 				BBB56BDD1E940AE700344E44 /* ViewController.swift in Sources */,
 				BBB56BF01E940B1E00344E44 /* BookCollection.swift in Sources */,
+				BB1B86ED1E96C25100ACA185 /* BookDetailViewController.swift in Sources */,
 				BBB56BDB1E940AE700344E44 /* AppDelegate.swift in Sources */,
 				BBB56BF41E941DC600344E44 /* BookListingController.swift in Sources */,
 			);
@@ -326,6 +330,7 @@
 				BBB56BEB1E940AE700344E44 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
