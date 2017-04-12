@@ -9,22 +9,18 @@
 import UIKit
 
 class BookDetailViewController: UIViewController {
-    var book:BookListing?
     
-    @IBOutlet weak var titleLabel: UITextField!
-    @IBOutlet weak var authorLabel: UITextField!
-    @IBOutlet weak var yearLabel: UITextField!
     
+    @IBOutlet weak var titleField: UITextField!
+    @IBOutlet weak var authorField: UITextField!
+    @IBOutlet weak var yearField: UITextField!
+    @IBOutlet weak var saveButton: UIBarButtonItem!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        if let book = book{
-            titleLabel.text = book.title
-            authorLabel.text = book.author
-            yearLabel.text = String(book.year)
-        }
+        
         
     }
 

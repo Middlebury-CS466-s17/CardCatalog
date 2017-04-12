@@ -167,9 +167,10 @@
                         <barButtonItem key="rightBarButtonItem" systemItem="save" id="Ykq-h8-JPr"/>
                     </navigationItem>
                     <connections>
-                        <outlet property="authorLabel" destination="FpP-59-JPK" id="NHF-hU-rFg"/>
-                        <outlet property="titleLabel" destination="80F-W5-DcM" id="0hk-SR-rIO"/>
-                        <outlet property="yearLabel" destination="QbT-an-IEa" id="zmn-SZ-peR"/>
+                        <outlet property="authorField" destination="FpP-59-JPK" id="80h-9K-qh7"/>
+                        <outlet property="saveButton" destination="Ykq-h8-JPr" id="tPY-f0-4Xe"/>
+                        <outlet property="titleField" destination="80F-W5-DcM" id="Gc5-D9-jK2"/>
+                        <outlet property="yearField" destination="QbT-an-IEa" id="wYf-qz-PXX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="chi-Am-mFJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
