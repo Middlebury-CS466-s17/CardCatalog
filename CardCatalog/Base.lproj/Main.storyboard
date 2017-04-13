@@ -70,7 +70,6 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Books" id="8eQ-zh-gZM">
-                        <barButtonItem key="leftBarButtonItem" systemItem="edit" id="Rc0-V8-VM8"/>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="N4k-3C-zi1">
                             <connections>
                                 <segue destination="F46-3y-CQq" kind="presentation" identifier="AddBook" id="efh-Xq-G0R"/>

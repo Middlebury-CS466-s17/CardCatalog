@@ -22,22 +22,14 @@ class BookListingController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
 
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print(books.collection.count)
-
-        // #warning Incomplete implementation, return the number of rows
         return books.collection.count
     }
 
@@ -48,12 +40,9 @@ class BookListingController: UITableViewController {
         }
 
         // Configure the cell...
-    
         let book = books.collection[indexPath.row]
-        print(book)
         cell.configureCell(book: book)
         
-
         return cell
     }
  
@@ -93,14 +82,57 @@ class BookListingController: UITableViewController {
     }
     */
 
-    /*
     // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    
+    // prepare to go to the detail view
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+        
+        switch(segue.identifier ?? ""){
+        case "AddBook":
+            guard let navController = segue.destination as? UINavigationController else{
+                fatalError("Unexpected destination: \(segue.destination)")
+            }
+            guard let destination = navController.topViewController as? BookDetailViewController else{
+                fatalError("Unexpected destination: \(segue.destination)")
+            }
+            destination.type = .new
+            destination.callback = { (title, author, year) in
+                self.books.add(title:title, author: author, year: year)
+            }
+        case "EditBook":
+            
+            guard let destination = segue.destination as? BookDetailViewController else{
+                fatalError("Unexpected destination: \(segue.destination)")
+            }
+            
+            guard let cell = sender as? BookListingCell else{
+                fatalError("Unexpected sender: \(sender)")
+            }
+            
+            guard let indexPath = tableView.indexPath(for: cell) else{
+                fatalError("The selected cell can't be found")
+            }
+            
+            let book = books.collection[indexPath.row]
+            
+            destination.type = .update(book.title, book.author, book.year)
+            destination.callback = { (title, author, year) in
+                book.title = title
+                book.author = author
+                book.year = year
+            }
+            
+            
+        default:
+            fatalError("Unexpeced segue identifier: \(segue.identifier)")
+        }
     }
-    */
+    
+    @IBAction func unwindFromEdit(sender: UIStoryboardSegue){
+        tableView.reloadData()
+    }
+
 
 }

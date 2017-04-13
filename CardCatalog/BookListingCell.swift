@@ -15,7 +15,7 @@ class BookListingCell: UITableViewCell {
     @IBOutlet weak var yearLabel: UILabel!
     
     
-    func configureCell(book: BookListing){
+    func configureCell(book: Book){
         titleLabel.text = book.title
         authorLabel.text = book.author
         yearLabel.text = String(book.year)

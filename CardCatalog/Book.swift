@@ -9,13 +9,13 @@
 import Foundation
 
 
-class BookListing{
+class Book{
   
   var title:String
   var author: String
-  var year:Int
+  var year:Int16
   
-  init(title:String, author:String, year: Int){
+  init(title:String, author:String, year: Int16){
     self.title = title
     self.author = author
     self.year = year
