@@ -7,10 +7,16 @@
 //
 
 import UIKit
+import CoreData
 
 class BookListingController: UITableViewController {
 
-    private let books = BookCollection()
+    private var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>?
+    
+    private let books = BookCollection(){
+        print("Core Data connected")
+        
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,8 +26,30 @@ class BookListingController: UITableViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         self.navigationItem.leftBarButtonItem = self.editButtonItem
+        
+        initializeFetchResultsController()
     }
 
+    
+    func initializeFetchResultsController(){
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName:"Book")
+        let titleSort = NSSortDescriptor(key: "title", ascending: true)
+        request.sortDescriptors = [titleSort]
+        let moc = books.managedObjectContext
+        
+        
+        fetchedResultsController  = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
+        
+        do {
+            try fetchedResultsController?.performFetch()
+        }catch{
+            fatalError("Failed to fetch data")
+        }
+        
+    }
+    
+    
+    
 
     // MARK: - Table view data source
 
