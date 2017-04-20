@@ -9,9 +9,9 @@
 import UIKit
 import CoreData
 
-class BookListingController: UITableViewController {
+class BookListingController: UITableViewController, NSFetchedResultsControllerDelegate {
 
-    private var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>?
+    private var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>!
     
     private let books = BookCollection(){
         print("Core Data connected")
@@ -21,27 +21,33 @@ class BookListingController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
+        // Add the edit button on the left side programmatically
         self.navigationItem.leftBarButtonItem = self.editButtonItem
         
         initializeFetchResultsController()
     }
 
     
+    /*
+     Initialize the fetched results controller
+     
+     We configure this to fetch all of the books and break them into sections based on author name.
+     */
     func initializeFetchResultsController(){
+        // get all books
         let request = NSFetchRequest<NSFetchRequestResult>(entityName:"Book")
+        
+        // sort by author anme and then by title
+        let authorSort = NSSortDescriptor(key: "author.name", ascending: true)
         let titleSort = NSSortDescriptor(key: "title", ascending: true)
-        request.sortDescriptors = [titleSort]
+        request.sortDescriptors = [authorSort, titleSort]
+        
+        // Create the controller using our moc
         let moc = books.managedObjectContext
-        
-        
-        fetchedResultsController  = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
-        
+        fetchedResultsController  = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: "author.name", cacheName: nil)
+        fetchedResultsController.delegate = self
         do {
-            try fetchedResultsController?.performFetch()
+            try fetchedResultsController.performFetch()
         }catch{
             fatalError("Failed to fetch data")
         }
@@ -51,67 +57,99 @@ class BookListingController: UITableViewController {
     
     
 
-    // MARK: - Table view data source
+    // MARK: - Table view data source functions
 
+    /* Report the number of sections (managed by fetched results controller) */
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return fetchedResultsController.sections!.count
     }
 
+    /* Report the number of rows in a particular section (managed by fetched results controller) */
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return books.collection.count
+        guard let sections = fetchedResultsController!.sections else{
+            fatalError("No sections found")
+        }
+        
+        let sectionInfo = sections[section]
+        
+        return sectionInfo.numberOfObjects
     }
 
-    
+    /* Get a table cell loaded with the right data for the entry at indexPath (section/row)*/
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        // get one of our custom cells, building or reusing as needed
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "BookListingCell", for: indexPath) as? BookListingCell else{
             fatalError("Can't get cell of the right kind")
         }
+        
+        guard let book = self.fetchedResultsController.object(at: indexPath) as? Book else{
+            fatalError("Cannot find book")
+        }
 
-        // Configure the cell...
-        let book = books.collection[indexPath.row]
         cell.configureCell(book: book)
         
         return cell
     }
  
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+    /* Get the title to be displayed between sections */
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        guard let sections = fetchedResultsController.sections else{
+            fatalError("No sections in fetchedResultsController")
+        }
+        let sectionInfo = sections[section]
+        return sectionInfo.name
     }
-    */
 
     
-    // Override to support editing the table view.
+    /* Provides the edit functionality (deleteing rows) */
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // Delete the row from the data source
-            //tableView.deleteRows(at: [indexPath], with: .fade)
-            books.remove(at: indexPath.row)
-            tableView.reloadData()
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+            guard let book = self.fetchedResultsController?.object(at: indexPath) as? Book else{
+                fatalError("Cannot find book")
+            }
+            
+            books.delete(book)
+        }
     }
     
 
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
+    // MARK: Connect tableview to fetched results controller
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        tableView.beginUpdates()
     }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
+    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
+        switch type {
+        case .insert:
+            tableView.insertSections(IndexSet(integer: sectionIndex), with: .fade)
+        case .delete:
+            tableView.deleteSections(IndexSet(integer: sectionIndex), with: .fade)
+        case .move:
+            break
+        case .update:
+            break
+        }
     }
-    */
-
+    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        switch type {
+        case .insert:
+            tableView.insertRows(at: [newIndexPath!], with: .fade)
+        case .delete:
+            tableView.deleteRows(at: [indexPath!], with: .fade)
+        case .update:
+            tableView.reloadRows(at: [indexPath!], with: .fade)
+        case .move:
+            tableView.moveRow(at: indexPath!, to: newIndexPath!)
+        }
+    }
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        tableView.endUpdates()
+    }
+    
+  
     // MARK: - Navigation
     
     // prepare to go to the detail view
@@ -128,8 +166,8 @@ class BookListingController: UITableViewController {
                 fatalError("Unexpected destination: \(segue.destination)")
             }
             destination.type = .new
-            destination.callback = { (title, author, year) in
-                self.books.add(title:title, author: author, year: year)
+            destination.callback = { (title, authorName, year) in
+                self.books.add(title:title, authorName: authorName, year: year)
             }
         case "EditBook":
             
@@ -145,21 +183,24 @@ class BookListingController: UITableViewController {
                 fatalError("The selected cell can't be found")
             }
             
-            let book = books.collection[indexPath.row]
             
-            destination.type = .update(book.title, book.author, book.year)
+            guard let book = fetchedResultsController?.object(at: indexPath) as? Book else{
+                fatalError("fetched object was not a Book")
+            }
+            
+            destination.type = .update(book.title!, book.author!.name!, book.year)
             destination.callback = { (title, author, year) in
-                book.title = title
-                book.author = author
-                book.year = year
+                self.books.update(oldBook: book, title: title, authorName: author, year: year)
             }
             
             
         default:
             fatalError("Unexpeced segue identifier: \(segue.identifier)")
         }
+        
     }
     
+    /* This is here so that we have something to return to. It doesn't actually provide much functionality since the tableView is already tied to the fetched results controller. */
     @IBAction func unwindFromEdit(sender: UIStoryboardSegue){
         tableView.reloadData()
     }

@@ -11,54 +11,94 @@ import CoreData
 
 class BookCollection{
     
-    var managedObjectContext: NSManagedObjectContext
-    var persistentContainer: NSPersistentContainer
+    var managedObjectContext: NSManagedObjectContext // our in-memory data store and portal to the database
+    var persistentContainer: NSPersistentContainer // our database connection
     
     
-    
+    /* Initializes our collection by connecting to the database.
+ 
+     The closure is called when the connection has been established.
+     */
     init(completionClosure: @escaping ()->()){
         persistentContainer = NSPersistentContainer(name:"CardCatalog")
         managedObjectContext = persistentContainer.viewContext
         
         persistentContainer.loadPersistentStores(){ (description, err) in
             if let err = err{
+                // should try harder to mkae the connection and not just dump the user
                 fatalError("Could not load Core Data: \(err)")
             }
             
             completionClosure()
         }
-        
-        
-        
-//        collection += [
-//            Book(title: "The Hitchhiker's Guide to the Galaxy", author: "Douglas Adams", year: 1979),
-//            Book(title: "The Moon is a Harsh Mistress", author: "Robert Heinlein", year: 1966),
-//            Book(title: "Desolation Road", author: "Ian McDonald", year: 1988)
-//        ]
     }
     
-    
-    func add(title:String, author:String, year: Int16){
+    /*
+     This function will return an Author, creating if it doesn't exist.
+     
+     it is following the find-or-create design pattern
+     */
+    private func findAuthor(name:String)->Author?{
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Author")
+        request.fetchLimit = 1
+        request.predicate = NSPredicate(format:"name == %@", name)
+        do {
+            let matches = try managedObjectContext.fetch(request)
+            
+            if (matches.count == 0){
+                // can't find the author, make one
+                var author:Author!
+                managedObjectContext.performAndWait {
+                    author = Author(context: self.managedObjectContext)
+                    author.name = name
+                }
+                return author
+            }else{
+                return matches[0] as? Author
+            }
+        }catch{
+            fatalError("Unable to fetch authors")
+        }
+        return nil
+    }
+
+    /* Add a new book to the collection */
+    func add(title:String, authorName:String, year: Int16){
+        let author = findAuthor(name: authorName)
         var book:Book!
         managedObjectContext.performAndWait {
             book = Book(context: self.managedObjectContext)
             book.title = title
             book.author = author
-            book.year = year
+            book.year = Int16(year)
+            self.saveChanges()
         }
-        
-       // collection.append(Book(title: title, author: author, year: year))
     }
     
-//    func remove(at index:Int){
-//        //collection.remove(at: index)
-//        
-//    }
+    /* Update the fields on a book 
+     
+     We make this a seperate function rather than setting the values directly so that we can use findAuthor and save changes.
+     */
+    func update(oldBook: Book, title:String, authorName: String, year: Int16){
+        let author = findAuthor(name: authorName)
+        oldBook.title = title
+        oldBook.author = author
+        oldBook.year = Int16(year)
+        self.saveChanges()
+    }
     
+    /*
+     Remove a book from the collection
+     */
     func delete(_ book: Book){
         managedObjectContext.delete(book)
+        self.saveChanges()
     }
     
+    
+    /*
+     Save any changes stored in our moc back to the database.
+     */
     func saveChanges () {
         if managedObjectContext.hasChanges {
             do {

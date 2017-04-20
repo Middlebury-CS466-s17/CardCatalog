@@ -17,7 +17,7 @@ class BookListingCell: UITableViewCell {
     
     func configureCell(book: Book){
         titleLabel.text = book.title
-        authorLabel.text = book.author
+        authorLabel.text = book.author?.name
         yearLabel.text = String(book.year)
     }
     
