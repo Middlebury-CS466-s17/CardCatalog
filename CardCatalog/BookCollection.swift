@@ -50,8 +50,26 @@ class BookCollection{
        // collection.append(Book(title: title, author: author, year: year))
     }
     
-    func remove(at index:Int){
-        //collection.remove(at: index)
+//    func remove(at index:Int){
+//        //collection.remove(at: index)
+//        
+//    }
+    
+    func delete(_ book: Book){
+        managedObjectContext.delete(book)
+    }
+    
+    func saveChanges () {
+        if managedObjectContext.hasChanges {
+            do {
+                try managedObjectContext.save()
+            } catch {
+                // Replace this implementation with code to handle the error appropriately.
+                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                let nserror = error as NSError
+                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+            }
+        }
     }
 
 }
