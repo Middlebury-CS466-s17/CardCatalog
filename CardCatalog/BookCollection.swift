@@ -80,10 +80,15 @@ class BookCollection{
      We make this a seperate function rather than setting the values directly so that we can use findAuthor and save changes.
      */
     func update(oldBook: Book, title:String, authorName: String, year: Int16){
-        let author = findAuthor(name: authorName)
-        oldBook.title = title
-        oldBook.author = author
-        oldBook.year = Int16(year)
+        if oldBook.author?.name != authorName {
+            // we can't just adjust the name because of various data dependancies
+            // so we will delete the book and make a new one
+            delete(oldBook)
+            add(title: title, authorName: authorName, year: year)
+        }else{
+            oldBook.title = title
+            oldBook.year = Int16(year)
+        }
         self.saveChanges()
     }
     
