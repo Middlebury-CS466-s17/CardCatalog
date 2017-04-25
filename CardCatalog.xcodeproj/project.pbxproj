@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		BB1B86ED1E96C25100ACA185 /* BookDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB1B86EC1E96C25100ACA185 /* BookDetailViewController.swift */; };
+		BB3D8E4A1EAFC4530089F044 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB3D8E491EAFC4530089F044 /* CloudKit.framework */; };
 		BBB56BDB1E940AE700344E44 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBB56BDA1E940AE700344E44 /* AppDelegate.swift */; };
 		BBB56BE01E940AE700344E44 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BBB56BDE1E940AE700344E44 /* Main.storyboard */; };
 		BBB56BE21E940AE700344E44 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BBB56BE11E940AE700344E44 /* Assets.xcassets */; };
@@ -20,6 +21,8 @@
 
 /* Begin PBXFileReference section */
 		BB1B86EC1E96C25100ACA185 /* BookDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookDetailViewController.swift; sourceTree = "<group>"; };
+		BB3D8E471EAFC4340089F044 /* CardCatalog.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CardCatalog.entitlements; sourceTree = "<group>"; };
+		BB3D8E491EAFC4530089F044 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		BBB56BD71E940AE700344E44 /* CardCatalog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CardCatalog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BBB56BDA1E940AE700344E44 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BBB56BDF1E940AE700344E44 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -37,17 +40,27 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BB3D8E4A1EAFC4530089F044 /* CloudKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BB3D8E481EAFC4530089F044 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BB3D8E491EAFC4530089F044 /* CloudKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		BBB56BCE1E940AE700344E44 = {
 			isa = PBXGroup;
 			children = (
 				BBB56BD91E940AE700344E44 /* CardCatalog */,
 				BBB56BD81E940AE700344E44 /* Products */,
+				BB3D8E481EAFC4530089F044 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -62,6 +75,7 @@
 		BBB56BD91E940AE700344E44 /* CardCatalog */ = {
 			isa = PBXGroup;
 			children = (
+				BB3D8E471EAFC4340089F044 /* CardCatalog.entitlements */,
 				BBB56BEC1E940AFC00344E44 /* Supporting Files */,
 				BBB56BEE1E940B1E00344E44 /* BookCollection.swift */,
 				BBB56BED1E940B1E00344E44 /* Book.swift */,
@@ -116,8 +130,16 @@
 				TargetAttributes = {
 					BBB56BD61E940AE700344E44 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = 426D427L9G;
+						DevelopmentTeam = TSRANL5S76;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+							com.apple.iCloud = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -285,10 +307,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 426D427L9G;
+				CODE_SIGN_ENTITLEMENTS = CardCatalog/CardCatalog.entitlements;
+				DEVELOPMENT_TEAM = TSRANL5S76;
 				INFOPLIST_FILE = CardCatalog/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = edu.middlebury.cs466.CardCatalog;
+				PRODUCT_BUNDLE_IDENTIFIER = edu.middlebury.cs466.inclass.CardCatalog;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
@@ -298,10 +321,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 426D427L9G;
+				CODE_SIGN_ENTITLEMENTS = CardCatalog/CardCatalog.entitlements;
+				DEVELOPMENT_TEAM = TSRANL5S76;
 				INFOPLIST_FILE = CardCatalog/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = edu.middlebury.cs466.CardCatalog;
+				PRODUCT_BUNDLE_IDENTIFIER = edu.middlebury.cs466.inclass.CardCatalog;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};

@@ -8,13 +8,14 @@
 
 import UIKit
 
-class BookListingController: UITableViewController {
+class BookListingController: UITableViewController, BookCollectionDelegate {
 
     private let books = BookCollection()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        books.delegate = self
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -22,6 +23,9 @@ class BookListingController: UITableViewController {
         self.navigationItem.leftBarButtonItem = self.editButtonItem
     }
 
+    func dataChanged() {
+        tableView.reloadData()
+    }
 
     // MARK: - Table view data source
 
@@ -124,6 +128,7 @@ class BookListingController: UITableViewController {
                 book.title = title
                 book.author = author
                 book.year = year
+                book.save()
             }
             
             
