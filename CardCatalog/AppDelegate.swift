@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import UserNotifications
+import CloudKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,6 +18,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert]){(authorized, err) in
+            if authorized{
+                application.registerForRemoteNotifications()
+            }
+        }
+        
         return true
     }
 
@@ -41,6 +50,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
+    
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        let notification = CKNotification(fromRemoteNotificationDictionary:userInfo)
+        
+        if notification.notificationType == .query{
+            let recordID = notification.subscriptionID
+            print(recordID)
+        }
+        
+    }
+    
 
 }
 

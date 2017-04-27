@@ -26,6 +26,7 @@ class BookCollection{
         dbPublic = CKContainer.default().publicCloudDatabase
         
         fetchBooks()
+        startSubscription()
         
 //        collection += [
 //            Book(title: "The Hitchhiker's Guide to the Galaxy", author: "Douglas Adams", year: 1979),
@@ -59,6 +60,25 @@ class BookCollection{
         }
         
     }
+    
+    func startSubscription(){
+        let predicate  = NSPredicate(value:true)
+        let subscription = CKQuerySubscription(recordType: "Books", predicate: predicate, options: [.firesOnRecordUpdate, .firesOnRecordCreation, .firesOnRecordDeletion])
+        
+        let notificationInfo = CKNotificationInfo()
+        notificationInfo.alertActionLocalizationKey = "New book data"
+        notificationInfo.shouldBadge = false
+        subscription.notificationInfo = notificationInfo
+        
+        dbPublic.save(subscription){ (sub, err) in
+            if let error = err{
+                print("Unable to save subscription")
+                print(error)
+            }
+        }
+        
+    }
+    
     
     
     func add(title:String, author:String, year: Int16){
